@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在之間，成為</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+  margin:0;
+  font-family:"Noto Sans TC", sans-serif;
+  background:#f8f8f8;
+  color:#333;
+  scroll-behavior:smooth;
+}
+
+/* 通用 */
+section{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+/* nav */
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:rgba(255,255,255,0.7);
+  text-align:center;
+  padding:10px;
+  z-index:1000;
+}
+
+nav a{
+  margin:0 10px;
+  text-decoration:none;
+  color:#333;
+}
+
+/* ===== 拼圖 ===== */
+.puzzle-area{
+  position:relative;
+  width:260px;
+  height:260px;
+}
+
+.piece{
+  position:absolute;
+  width:120px;
+  cursor:grab;
+  transition:0.3s;
+}
+.piece:hover{
+  transform:scale(1.05);
+}
+
+/* ===== slider ===== */
+.slider{position:relative;width:260px;}
+.slider img{width:100%;}
+#overlay{position:absolute;top:0;left:0;width:20%;overflow:hidden;}
+
+/* ===== fade ===== */
+.fade{
+  opacity:0;
+  transform:translateY(20px);
+  transition:1s;
+}
+.fade.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== 台大夢境 ===== */
+.dream{
+  animation:dream 2s infinite alternate;
+}
+@keyframes dream{
+  0%{filter:blur(0);}
+  100%{filter:blur(3px);opacity:0.7;}
+}
+
+/* ===== 第五章 ===== */
+.dual{
+  position:relative;
+}
+.dual img{
+  position:absolute;
+  width:200px;
+  animation:breathe 3s infinite alternate;
+}
+@keyframes breathe{
+  0%{opacity:0.6;}
+  100%{opacity:1;}
+}
+
+/* ===== 最終 ===== */
+.identity{
+  position:absolute;
+  width:120px;
+  transition:0.5s;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<a href="#p1">拼圖</a>
+<a href="#p2">身分</a>
+<a href="#p3">轉換</a>
+<a href="#p4">台大</a>
+<a href="#p5">生活</a>
+<a href="#end">最後</a>
+</nav>
+
+<!-- 第一章 -->
+<section id="p1">
+
+<div class="puzzle-area">
+<img src="images/puzzle/p1.png" class="piece" data-x="0" data-y="0">
+<img src="images/puzzle/p2.png" class="piece" data-x="140" data-y="0">
+<img src="images/puzzle/p3.png" class="piece" data-x="0" data-y="140">
+<img src="images/puzzle/p4.png" class="piece" data-x="140" data-y="140">
+</div>
+
+<p id="puzzleText"></p>
+
+</section>
+
+<!-- 第二章 -->
+<section id="p2">
+<div class="slider">
+<img src="images/identity/city.png">
+<div id="overlay">
+<img src="images/identity/culture.png">
+</div>
+<input type="range" id="range" value="20">
+</div>
+
+<p id="text2">我從小在城市長大。</p>
+</section>
+
+<!-- 第三章 -->
+<section id="p3">
+<img src="images/school/vocational.png" class="fade">
+<img src="images/school/elite.png" class="fade">
+<p class="fade">
+後來，我換了一個環境。<br>
+開始慢慢發現，不同地方的標準不太一樣。
+</p>
+</section>
+
+<!-- 第四章 -->
+<section id="p4">
+<img src="images/ntuk.png" class="dream">
+<p>
+進到這裡之後，<br>
+有些期待，慢慢出現。
+</p>
+</section>
+
+<!-- 第五章 -->
+<section id="p5">
+<div class="dual">
+<img src="images/life/study.png">
+<img src="images/life/work.png" style="transform:translate(10px,10px);">
+</div>
+
+<p>
+學生與工讀，沒有分開，<br>
+而是同時存在在生活裡。
+</p>
+</section>
+
+<!-- 最終 -->
+<section id="end">
+<div style="position:relative;width:300px;height:300px;">
+<img src="images/identity/city.png" class="identity" style="top:0;left:0">
+<img src="images/identity/culture.png" class="identity" style="top:0;right:0">
+<img src="images/school/vocational.png" class="identity" style="bottom:0;left:0">
+<img src="images/school/elite.png" class="identity" style="bottom:0;right:0">
+<img src="images/life/study.png" class="identity" style="top:50%;left:0">
+<img src="images/life/work.png" class="identity" style="top:50%;right:0">
+</div>
+
+<p>
+我不是只有一種樣子。<br>
+現在的我，是這些經驗交在一起的樣子。
+</p>
+</section>
+
+<script>
+
+/* 拼圖拖曳＋完成 */
+const pieces=document.querySelectorAll(".piece");
+let correct=0;
+
+pieces.forEach(p=>{
+p.onmousedown=function(e){
+
+let shiftX=e.clientX-p.offsetLeft;
+let shiftY=e.clientY-p.offsetTop;
+
+function move(e){
+p.style.left=e.pageX-shiftX+"px";
+p.style.top=e.pageY-shiftY+"px";
+}
+
+document.addEventListener("mousemove",move);
+
+p.onmouseup=function(){
+document.removeEventListener("mousemove",move);
+
+let x=p.dataset.x;
+let y=p.dataset.y;
+
+if(Math.abs(p.offsetLeft-x)<30 && Math.abs(p.offsetTop-y)<30){
+
+if(!p.classList.contains("done")){
+correct++;
+p.classList.add("done");
+}
+
+p.style.left=x+"px";
+p.style.top=y+"px";
+}
+
+if(correct===4){
+setTimeout(()=>{
+document.getElementById("p2").scrollIntoView({behavior:"smooth"});
+},600);
+}
+
+p.onmouseup=null;
+}
+}
+});
+
+/* slider */
+const r=document.getElementById("range");
+const o=document.getElementById("overlay");
+const t=document.getElementById("text2");
+
+r.oninput=()=>{
+o.style.width=r.value+"%";
+
+if(r.value<30){
+t.innerText="我從小在城市長大。";
+}else if(r.value<70){
+t.innerText="但我的身分不只這樣。";
+}else{
+t.innerText="有些文化一直在我身上。";
+}
+}
+
+/* 滾動 */
+const fades=document.querySelectorAll(".fade");
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting){e.target.classList.add("show");}
+});
+});
+fades.forEach(el=>obs.observe(el));
+
+/* 最終變化 */
+const ids=document.querySelectorAll(".identity");
+
+setInterval(()=>{
+const i=Math.floor(Math.random()*ids.length);
+ids[i].style.transform=`scale(${0.9+Math.random()*0.3})`;
+},800);
+
+/* 最終淡出 */
+const end=document.getElementById("end");
+
+const endObs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting){
+setTimeout(()=>{
+end.style.transition="2s";
+end.style.opacity="0.6";
+},2000);
+}
+});
+});
+
+endObs.observe(end);
+
+</script>
+
+</body>
+</html>
