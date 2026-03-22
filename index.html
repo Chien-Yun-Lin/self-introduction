@@ -26,34 +26,37 @@ body{
 
 #sceneImg{
   max-width:180px;
-  width:100%;
-  margin:0 auto 20px auto;
+  margin:0 auto 20px;
   display:none;
   opacity:0;
-  transition:opacity 1.8s ease;
+  transition:opacity 1.2s ease;
 }
 #sceneImg.show{opacity:1;}
 
-#text{
-  line-height:1.9;
-  margin-bottom:30px;
-  white-space:pre-line;
+.paragraph{
+  opacity:0.35;
+  transition:opacity 0.6s ease, transform 0.4s ease;
+  margin-bottom:12px;
 }
-  
-#text::after{
-  content:"|";
-  animation:blink 1s infinite;
+
+.paragraph.active{
+  opacity:1;
+  transform:translateY(-2px);
 }
-@keyframes blink{
-  0%,50%,100%{opacity:1;}
-  25%,75%{opacity:0;}
+
+button{
+  margin-top:15px;
+  padding:8px 16px;
+  border:none;
+  background:#ddd;
+  cursor:pointer;
 }
 
 .choice{
   border:1px solid #ccc;
   border-radius:20px;
   padding:10px;
-  margin:8px 0;
+  margin-top:15px;
   cursor:pointer;
 }
 .choice:hover{background:#eee;}
@@ -64,200 +67,131 @@ body{
 <body>
 
 <div class="container">
-  <img id="sceneImg">
-  <div id="text"></div>
-  <div id="choices"></div>
+
+<img id="sceneImg">
+<div id="text"></div>
+
+<button id="nextBtn" style="display:none;">繼續</button>
+
+<div id="choices"></div>
+
 </div>
 
 <script>
-
-let visited = new Set();
 
 const story = {
 
 start:{
 text:`我很難用一種「典型」的方式來描述自己的身分與認同。`,
-img:null,
 choices:[
-  {text:"從更早開始", next:"early"},
+  {text:"早療", next:"early"},
   {text:"族群", next:"ethnicity"},
-  {text:"教育與階級", next:"class"},
-  {text:"學科與知識", next:"discipline"},
-  {text:"性別與情感", next:"gender"},
-  {text:"日常生活", next:"life"}
+  {text:"階級與教育", next:"class"},
+  {text:"學科", next:"discipline"},
+  {text:"性別", next:"gender"},
+  {text:"生活", next:"life"}
 ]
 },
 
 early:{
-text:`在更早之前，我其實是被觀察與修正的對象。
+img:["images/puzzle/all.png"],
+steps:[
+`在更早之前，我其實是被觀察與修正的對象。`,
 
-有一段時間，我接受早期療育。
-很多細節被注意、被記錄，也被調整。
+`有一段時間，我接受早期療育。
+很多細節被注意、被記錄，也被調整。`,
 
-那些過程不一定留下明確記憶，
-但影響了我理解自己的方式。`,
-img:"images/puzzle/all.png",
+`這些過程不一定留下明確記憶，
+但影響了我理解自己的方式。`
+],
 choices:[{text:"回到開始", next:"start"}]
 },
 
 ethnicity:{
-text:`我是原住民，但沒有在部落成長。
-生活方式也以都市漢人文化為主。
+img:["images/identity/city.png","images/identity/culture.png"],
+steps:[
+`我在城市長大，生活方式與多數人沒有太大差別。`,
 
-這樣的距離感，讓我開始思考自己的位置。`,
-img:"images/identity/city.png",
-choices:[
-  {text:"他人如何看我？", next:"ethnicity2"},
-  {text:"回到開始", next:"start"}
-]
-},
+`但當身分被提起時，另一種理解方式也同時出現。`,
 
-ethnicity2:{
-text:`在多數情境中，我被視為主流的一部分。
-
-但當身分被知道時，
-會出現一些預設與想像。
-
-族群不只是生活方式，
-也是一種社會分類。`,
-img:"images/identity/culture.png",
+`這兩種狀態，不是輪流發生，而是同時存在。`
+],
 choices:[{text:"回到開始", next:"start"}]
 },
 
 class:{
-text:`家裡曾有一段時間屬於低收入戶。
+img:[
+"images/school/vocational.png",
+"images/school/elite.png",
+"images/ntuk.png"
+],
+steps:[
+`家裡曾有一段時間屬於低收入戶。
 
-很多選擇不是興趣導向，
-而是成本導向。`,
-img:"images/school/vocational.png",
-choices:[
-  {text:"教育經驗", next:"class2"},
-  {text:"回到開始", next:"start"}
-]
-},
+很多選擇不是興趣導向，而是成本導向。`,
 
-class2:{
-text:`從內湖高工到中山女高，
-我第一次明顯感受到文化差異。
+`從高職到中山女高，我第一次明顯感受到文化差異。
 
-原來校園也是一種階級文化的縮影。`,
-img:"images/school/elite.png",
-choices:[
-  {text:"進入台大", next:"ntu"},
-  {text:"回到開始", next:"start"}
-]
-},
+校園也是一種階級文化的縮影。`,
 
-ntu:{
-text:`後來，我成為家族第一個臺大生。
+`後來，我進入台灣大學。
 
 這不只是學校的改變，
-也包含他人看待我的方式。
-
-有些期待，變得理所當然。`,
-img:"images/ntuk.png",
+也包含他人看待我的方式。`
+],
 choices:[{text:"回到開始", next:"start"}]
 },
 
 discipline:{
-text:`我曾在農藝系學習。
+img:["images/life/study.png","images/life/work.png"],
+steps:[
+`我曾在農藝系學習。`,
 
-那裡重視技術與效率。`,
-img:"images/life/study.png",
-choices:[
-  {text:"轉入歷史系", next:"discipline2"},
-  {text:"回到開始", next:"start"}
-]
-},
+`後來轉入歷史系。`,
 
-discipline2:{
-text:`後來轉入歷史系。
-
-我開始更關心土地背後的歷史與人。
-
-不同學科，其實代表不同世界觀。`,
-img:"images/life/work.png",
+`不同學科，其實代表不同世界觀。`
+],
 choices:[{text:"回到開始", next:"start"}]
 },
 
 gender:{
-text:`在性別與情感認同上，我是雙性戀。
+steps:[
+`在性別與情感認同上，我是雙性戀。`,
 
-異性戀常被視為默認。`,
-img:null,
-choices:[
-  {text:"如何影響我？", next:"gender2"},
-  {text:"回到開始", next:"start"}
-]
-},
+`很多時候，我會先觀察環境。`,
 
-gender2:{
-text:`很多時候，我會先觀察環境，
-再決定是否表達自己。
-
-文化透過細微方式提醒誰是多數。`,
-img:null,
+`再決定是否表達自己。`
+],
 choices:[{text:"回到開始", next:"start"}]
 },
 
 life:{
-text:`我的生活不只一種樣貌。
+img:["images/life/study.png","images/life/work.png"],
+steps:[
+`有些時間，我在課堂裡。`,
 
-有些時間，我在課堂裡。
-有些時間，我在辦公室。
+`有些時間，我在工作場域。`,
 
-這兩種狀態交錯在日常裡。`,
-img:"images/life/study.png",
-choices:[
-  {text:"另一種狀態", next:"life2"},
-  {text:"回到開始", next:"start"}
-]
-},
-
-life2:{
-text:`在不同節奏之間切換，
-沒有明確界線。
-
-只是持續發生。`,
-img:"images/life/work.png",
+`這不是分開的生活，而是交織在一起。`
+],
 choices:[{text:"回到開始", next:"start"}]
-},
-
-final:{
-text:`回頭看，我處在多重位置之間。
-
-這些經驗不一定衝突，
-但會在不同情境中浮現。
-
-我不是單一的樣子，
-而是在這些之間，逐漸成為。`,
-img:null,
-choices:[
-  {text:"重新開始", next:"start"}
-]
 }
 
 };
 
-function typeText(el, text, callback){
+function typeWriter(el, text){
 
   el.innerText="";
   let i=0;
 
   function typing(){
-    if(i >= text.length){
-      if(callback) callback();
-      return;
-    }
+    if(i>=text.length) return;
 
     el.innerText += text[i];
 
-    let char = text[i];
-    let delay = 45;
-
-    if(i < 10) delay = 80;
-    if(char === "\n") delay = 300;
-    if(char === "。" || char === "，") delay = 120;
+    let delay = 40;
+    if(text[i]==="\n") delay = 200;
+    if(text[i]==="。" || text[i]==="，") delay = 120;
 
     i++;
     setTimeout(typing, delay);
@@ -266,53 +200,100 @@ function typeText(el, text, callback){
   typing();
 }
 
-function render(scene){
+let stepIndex = 0;
 
-visited.add(scene);
+function renderProgressive(scene){
 
 const textBox=document.getElementById("text");
-const choiceBox=document.getElementById("choices");
+const btn=document.getElementById("nextBtn");
 const img=document.getElementById("sceneImg");
+const choices=document.getElementById("choices");
 
-choiceBox.innerHTML="";
+const data=story[scene];
 
-if(story[scene].img){
-  img.classList.remove("show");
-  img.src=story[scene].img;
+stepIndex=0;
+textBox.innerHTML="";
+choices.innerHTML="";
+
+if(data.img){
+  img.src=data.img[0];
   img.style.display="block";
-  setTimeout(()=>img.classList.add("show"),250);
+  setTimeout(()=>img.classList.add("show"),200);
 }else{
   img.style.display="none";
 }
 
-typeText(textBox, story[scene].text, ()=>{
+btn.style.display="inline-block";
 
-  story[scene].choices.forEach(c=>{
-    const btn=document.createElement("div");
-    btn.className="choice";
-    btn.innerText=c.text;
-    btn.onclick=()=>render(c.next);
-    choiceBox.appendChild(btn);
-  });
+function showNext(){
 
-  if(
-    visited.has("early") &&
-    visited.has("ethnicity2") &&
-    visited.has("class2") &&
-    visited.has("ntu") &&
-    visited.has("discipline2") &&
-    visited.has("gender2") &&
-    visited.has("life2") &&
-    scene === "start"
-  ){
-    const btn=document.createElement("div");
-    btn.className="choice";
-    btn.innerText="查看整體";
-    btn.onclick=()=>render("final");
-    choiceBox.appendChild(btn);
+  if(stepIndex>=data.steps.length){
+
+    btn.style.display="none";
+
+    data.choices.forEach(c=>{
+      const div=document.createElement("div");
+      div.className="choice";
+      div.innerText=c.text;
+      div.onclick=()=>render(c.next);
+      choices.appendChild(div);
+    });
+
+    return;
   }
 
+  document.querySelectorAll(".paragraph").forEach(el=>{
+    el.classList.remove("active");
+  });
+
+  const p=document.createElement("div");
+  p.className="paragraph active";
+  textBox.appendChild(p);
+
+  typeWriter(p, data.steps[stepIndex]);
+
+  if(data.img && data.img[stepIndex]){
+    img.classList.remove("show");
+    img.src=data.img[stepIndex];
+    setTimeout(()=>img.classList.add("show"),100);
+  }
+
+  stepIndex++;
+}
+
+btn.onclick=showNext;
+
+showNext();
+
+}
+
+function render(scene){
+
+if(scene==="start"){
+
+const textBox=document.getElementById("text");
+const choices=document.getElementById("choices");
+const img=document.getElementById("sceneImg");
+const btn=document.getElementById("nextBtn");
+
+img.style.display="none";
+btn.style.display="none";
+
+textBox.innerHTML=`<div class="paragraph active">${story.start.text}</div>`;
+choices.innerHTML="";
+
+story.start.choices.forEach(c=>{
+const div=document.createElement("div");
+div.className="choice";
+div.innerText=c.text;
+div.onclick=()=>renderProgressive(c.next);
+choices.appendChild(div);
 });
+
+return;
+}
+
+renderProgressive(scene);
 
 }
 
