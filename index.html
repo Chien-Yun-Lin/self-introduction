@@ -24,16 +24,14 @@ body{
 }
 
 #sceneImg{
-  width:260px;
+  max-width:220px;
+  width:100%;
   margin-bottom:20px;
   display:none;
   opacity:0;
-  transition:opacity 0.8s ease;
+  transition:opacity 1.8s ease;
 }
-
-#sceneImg.show{
-  opacity:1;
-}
+#sceneImg.show{opacity:1;}
 
 #text{
   line-height:1.9;
@@ -45,7 +43,6 @@ body{
   content:"|";
   animation:blink 1s infinite;
 }
-
 @keyframes blink{
   0%,50%,100%{opacity:1;}
   25%,75%{opacity:0;}
@@ -59,10 +56,7 @@ body{
   text-align:center;
   cursor:pointer;
 }
-
-.choice:hover{
-  background:#eee;
-}
+.choice:hover{background:#eee;}
 
 </style>
 </head>
@@ -92,6 +86,7 @@ choices:[
 ]
 },
 
+/* 早療 */
 early:{
 text:`在更早之前，我其實是被觀察與修正的對象。
 
@@ -100,10 +95,8 @@ text:`在更早之前，我其實是被觀察與修正的對象。
 
 那些過程不一定留下明確記憶，
 但影響了我理解自己的方式。`,
-img:"images/puzzle/all.png",
-choices:[
-  {text:"回到開始", next:"start"}
-]
+img:"images/puzzle/p1.png",
+choices:[{text:"回到開始", next:"start"}]
 },
 
 /* 族群 */
@@ -128,9 +121,7 @@ text:`在多數情境中，我被視為主流的一部分。
 族群不只是生活方式，
 也是一種社會分類。`,
 img:"images/identity/culture.png",
-choices:[
-  {text:"回到開始", next:"start"}
-]
+choices:[{text:"回到開始", next:"start"}]
 },
 
 /* 階級 */
@@ -153,7 +144,7 @@ text:`從高職到中山女高，
 校園也是一種階級文化的縮影。`,
 img:"images/school/elite.png",
 choices:[
-  {text:"進入另一個階段", next:"ntu"},
+  {text:"進入台大", next:"ntu"},
   {text:"回到開始", next:"start"}
 ]
 },
@@ -167,9 +158,7 @@ text:`後來，我進入台灣大學。
 
 有些期待，變得理所當然。`,
 img:"images/ntuk.png",
-choices:[
-  {text:"回到開始", next:"start"}
-]
+choices:[{text:"回到開始", next:"start"}]
 },
 
 /* 學科 */
@@ -179,7 +168,7 @@ text:`我曾在農藝系學習。
 那裡重視技術與效率。`,
 img:"images/life/study.png",
 choices:[
-  {text:"轉系", next:"discipline2"},
+  {text:"轉入歷史系", next:"discipline2"},
   {text:"回到開始", next:"start"}
 ]
 },
@@ -191,9 +180,7 @@ text:`後來轉入歷史系。
 
 不同學科，其實代表不同世界觀。`,
 img:"images/life/work.png",
-choices:[
-  {text:"回到開始", next:"start"}
-]
+choices:[{text:"回到開始", next:"start"}]
 },
 
 /* 性別 */
@@ -214,9 +201,7 @@ text:`很多時候，我會先觀察環境，
 
 文化透過細微方式提醒誰是多數。`,
 img:null,
-choices:[
-  {text:"回到開始", next:"start"}
-]
+choices:[{text:"回到開始", next:"start"}]
 },
 
 /* 生活 */
@@ -240,23 +225,30 @@ text:`在不同節奏之間切換，
 
 只是持續發生。`,
 img:"images/life/work.png",
-choices:[
-  {text:"回到開始", next:"start"}
-]
+choices:[{text:"回到開始", next:"start"}]
 }
 
 };
 
-function typeText(el, text, speed=25){
+function typeText(el, text){
+
   el.innerText="";
   let i=0;
 
   function typing(){
-    if(i<text.length){
-      el.innerText+=text[i];
-      i++;
-      setTimeout(typing,speed);
-    }
+    if(i >= text.length) return;
+
+    el.innerText += text[i];
+
+    let char = text[i];
+    let delay = 45;
+
+    if(i < 10) delay = 80;
+    if(char === "\n") delay = 300;
+    if(char === "。" || char === "，") delay = 120;
+
+    i++;
+    setTimeout(typing, delay);
   }
 
   typing();
@@ -275,13 +267,14 @@ if(story[scene].img){
   img.src=story[scene].img;
   img.style.display="block";
 
-  setTimeout(()=>img.classList.add("show"),50);
-
+  setTimeout(()=>img.classList.add("show"),250);
 }else{
   img.style.display="none";
 }
 
-typeText(textBox,story[scene].text,25);
+typeText(textBox, story[scene].text);
+
+let delay = story[scene].text.length * 40;
 
 setTimeout(()=>{
   story[scene].choices.forEach(c=>{
@@ -291,7 +284,7 @@ setTimeout(()=>{
     btn.onclick=()=>render(c.next);
     choiceBox.appendChild(btn);
   });
-}, story[scene].text.length * 15);
+}, delay);
 
 }
 
