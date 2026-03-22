@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
+
 body{
   margin:0;
   background:#f8f8f8;
@@ -22,10 +23,32 @@ body{
   max-width:520px;
 }
 
+#sceneImg{
+  width:260px;
+  margin-bottom:20px;
+  display:none;
+  opacity:0;
+  transition:opacity 0.8s ease;
+}
+
+#sceneImg.show{
+  opacity:1;
+}
+
 #text{
   line-height:1.9;
   margin-bottom:30px;
   white-space:pre-line;
+}
+
+#text::after{
+  content:"|";
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
 }
 
 .choice{
@@ -40,12 +63,14 @@ body{
 .choice:hover{
   background:#eee;
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+  <img id="sceneImg">
   <div id="text"></div>
   <div id="choices"></div>
 </div>
@@ -56,17 +81,38 @@ const story = {
 
 start:{
 text:`我很難用一種「典型」的方式來描述自己的身分與認同。`,
+img:null,
 choices:[
+  {text:"從更早開始", next:"early"},
   {text:"族群", next:"ethnicity"},
   {text:"教育與階級", next:"class"},
   {text:"學科與知識", next:"discipline"},
-  {text:"性別與情感", next:"gender"}
+  {text:"性別與情感", next:"gender"},
+  {text:"日常生活", next:"life"}
+]
+},
+
+early:{
+text:`在更早之前，我其實是被觀察與修正的對象。
+
+有一段時間，我接受早期療育。
+很多細節被注意、被記錄，也被調整。
+
+那些過程不一定留下明確記憶，
+但影響了我理解自己的方式。`,
+img:"images/puzzle/all.png",
+choices:[
+  {text:"回到開始", next:"start"}
 ]
 },
 
 /* 族群 */
 ethnicity:{
-text:`我是原住民，但沒有在部落成長。\n生活方式也以都市漢人文化為主。\n\n這樣的距離感，讓我開始思考：\n當文化沒有明顯外在標誌時，我如何理解自己的位置？`,
+text:`我是原住民，但沒有在部落成長。
+生活方式也以都市漢人文化為主。
+
+這樣的距離感，讓我開始思考自己的位置。`,
+img:"images/identity/city.png",
 choices:[
   {text:"他人如何看我？", next:"ethnicity2"},
   {text:"回到開始", next:"start"}
@@ -74,15 +120,26 @@ choices:[
 },
 
 ethnicity2:{
-text:`在多數情境中，我被視為主流的一部分。\n\n但當身分被知道時，\n會出現一些預設：\n升學加分、文化期待、家庭背景。\n\n族群不只是生活方式，\n也是一種社會分類。`,
+text:`在多數情境中，我被視為主流的一部分。
+
+但當身分被知道時，
+會出現一些預設與想像。
+
+族群不只是生活方式，
+也是一種社會分類。`,
+img:"images/identity/culture.png",
 choices:[
-  {text:"回到整體", next:"start"}
+  {text:"回到開始", next:"start"}
 ]
 },
 
 /* 階級 */
 class:{
-text:`家裡曾有一段時間屬於低收入戶。\n\n很多選擇不是興趣導向，\n而是成本導向。`,
+text:`家裡曾有一段時間屬於低收入戶。
+
+很多選擇不是興趣導向，
+而是成本導向。`,
+img:"images/school/vocational.png",
 choices:[
   {text:"教育經驗", next:"class2"},
   {text:"回到開始", next:"start"}
@@ -90,31 +147,61 @@ choices:[
 },
 
 class2:{
-text:`從高職到中山女高，\n我第一次明顯感受到文化差異。\n\n對未來的想像、\n對成功的定義、\n對自信的培養方式，都不一樣。\n\n校園也是一種階級文化的縮影。`,
+text:`從高職到中山女高，
+我第一次明顯感受到文化差異。
+
+校園也是一種階級文化的縮影。`,
+img:"images/school/elite.png",
 choices:[
-  {text:"回到整體", next:"start"}
+  {text:"進入另一個階段", next:"ntu"},
+  {text:"回到開始", next:"start"}
+]
+},
+
+/* 台大 */
+ntu:{
+text:`後來，我進入台灣大學。
+
+這不只是學校的改變，
+也包含他人看待我的方式。
+
+有些期待，變得理所當然。`,
+img:"images/ntuk.png",
+choices:[
+  {text:"回到開始", next:"start"}
 ]
 },
 
 /* 學科 */
 discipline:{
-text:`我曾在農藝系學習。\n\n那裡重視技術、效率與改良。`,
+text:`我曾在農藝系學習。
+
+那裡重視技術與效率。`,
+img:"images/life/study.png",
 choices:[
-  {text:"為何轉系？", next:"discipline2"},
+  {text:"轉系", next:"discipline2"},
   {text:"回到開始", next:"start"}
 ]
 },
 
 discipline2:{
-text:`後來我轉入歷史系。\n\n我開始更關心土地背後的歷史與人。\n\n不同學科，其實代表不同世界觀。`,
+text:`後來轉入歷史系。
+
+我開始更關心土地背後的歷史與人。
+
+不同學科，其實代表不同世界觀。`,
+img:"images/life/work.png",
 choices:[
-  {text:"回到整體", next:"start"}
+  {text:"回到開始", next:"start"}
 ]
 },
 
 /* 性別 */
 gender:{
-text:`在性別與情感認同上，我是雙性戀。\n\n異性戀常被視為默認。`,
+text:`在性別與情感認同上，我是雙性戀。
+
+異性戀常被視為默認。`,
+img:null,
 choices:[
   {text:"如何影響我？", next:"gender2"},
   {text:"回到開始", next:"start"}
@@ -122,37 +209,89 @@ choices:[
 },
 
 gender2:{
-text:`很多時候，我會先觀察環境，\n再決定是否表達自己。\n\n文化不一定排斥，\n但會透過語言與假設提醒誰是多數。`,
+text:`很多時候，我會先觀察環境，
+再決定是否表達自己。
+
+文化透過細微方式提醒誰是多數。`,
+img:null,
 choices:[
-  {text:"回到整體", next:"start"}
+  {text:"回到開始", next:"start"}
 ]
 },
 
-/* 結尾 */
-end:{
-text:`回頭看，我處在多重文化交會之中。\n\n這些不是劇烈衝突，\n而是日常中反覆出現的調整。\n\n認同不是宣告，\n而是一個持續理解的過程。`,
+/* 生活 */
+life:{
+text:`我的生活不只是一種樣子。
+
+有些時間，我在課堂裡。
+有些時間，我在工作場域。
+
+這兩種狀態交錯在日常裡。`,
+img:"images/life/study.png",
 choices:[
-  {text:"重新開始", next:"start"}
+  {text:"另一種狀態", next:"life2"},
+  {text:"回到開始", next:"start"}
+]
+},
+
+life2:{
+text:`在不同節奏之間切換，
+沒有明確界線。
+
+只是持續發生。`,
+img:"images/life/work.png",
+choices:[
+  {text:"回到開始", next:"start"}
 ]
 }
 
 };
 
+function typeText(el, text, speed=25){
+  el.innerText="";
+  let i=0;
+
+  function typing(){
+    if(i<text.length){
+      el.innerText+=text[i];
+      i++;
+      setTimeout(typing,speed);
+    }
+  }
+
+  typing();
+}
+
 function render(scene){
 
 const textBox=document.getElementById("text");
 const choiceBox=document.getElementById("choices");
+const img=document.getElementById("sceneImg");
 
-textBox.innerText=story[scene].text;
 choiceBox.innerHTML="";
 
-story[scene].choices.forEach(c=>{
-const btn=document.createElement("div");
-btn.className="choice";
-btn.innerText=c.text;
-btn.onclick=()=>render(c.next);
-choiceBox.appendChild(btn);
-});
+if(story[scene].img){
+  img.classList.remove("show");
+  img.src=story[scene].img;
+  img.style.display="block";
+
+  setTimeout(()=>img.classList.add("show"),50);
+
+}else{
+  img.style.display="none";
+}
+
+typeText(textBox,story[scene].text,25);
+
+setTimeout(()=>{
+  story[scene].choices.forEach(c=>{
+    const btn=document.createElement("div");
+    btn.className="choice";
+    btn.innerText=c.text;
+    btn.onclick=()=>render(c.next);
+    choiceBox.appendChild(btn);
+  });
+}, story[scene].text.length * 15);
 
 }
 
