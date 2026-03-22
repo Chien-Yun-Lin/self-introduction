@@ -2,325 +2,161 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>在之間，成為</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-
 body{
   margin:0;
-  font-family:"Noto Sans TC", sans-serif;
   background:#f8f8f8;
-  color:#333;
-  scroll-behavior:smooth;
-}
-
-section{
-  min-height:100vh;
+  font-family:"Noto Sans TC", sans-serif;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
-  padding:40px;
+  height:100vh;
 }
 
-nav{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:rgba(255,255,255,0.7);
-  text-align:center;
+.container{
+  width:90%;
+  max-width:520px;
+}
+
+#text{
+  line-height:1.9;
+  margin-bottom:30px;
+  white-space:pre-line;
+}
+
+.choice{
+  border:1px solid #ccc;
+  border-radius:20px;
   padding:10px;
-  z-index:1000;
+  margin:8px 0;
+  text-align:center;
+  cursor:pointer;
 }
 
-/* ===== 拼圖 ===== */
-.puzzle-area{
-  position:relative;
-  width:260px;
-  height:260px;
+.choice:hover{
+  background:#eee;
 }
-.piece{
-  position:absolute;
-  width:120px;
-  cursor:grab;
-}
-.piece.done{cursor:default;}
-
-/* ===== slider 共用 ===== */
-.slider, .slider-vertical{
-  position:relative;
-  width:260px;
-}
-
-.top{
-  width:100%;
-}
-
-#overlay{
-  position:absolute;
-  top:0;
-  left:0;
-  width:0%;
-  height:100%;
-  overflow:hidden;
-}
-
-#overlayV{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:0%;
-  overflow:hidden;
-}
-
-/* ===== 滑桿統一 ===== */
-input[type=range]{
-  -webkit-appearance:none;
-  background:transparent;
-}
-
-#range{width:260px;}
-#rangeV{
-  writing-mode: bt-lr;
-  height:200px;
-}
-
-input[type=range]::-webkit-slider-runnable-track{
-  height:4px;
-  background:#ccc;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-  width:14px;
-  height:14px;
-  background:#333;
-  border-radius:50%;
-  margin-top:-5px;
-}
-
-/* ===== 夢境 ===== */
-.dream{
-  animation:dream 2s infinite alternate;
-}
-@keyframes dream{
-  0%{filter:blur(0);}
-  100%{filter:blur(3px);opacity:0.7;}
-}
-
-/* ===== 第五章 ===== */
-.transition-box{
-  position:relative;
-  width:260px;
-}
-.transition-box img{
-  position:absolute;
-  width:100%;
-  transition:opacity 1.2s;
-}
-#img1{opacity:1;}
-#img2{opacity:0;}
-
-/* ===== 最終 ===== */
-.identity{
-  position:absolute;
-  width:120px;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- 第一章 -->
-<section id="p1">
-<div class="puzzle-area">
-
-<img src="images/puzzle/p1.png" class="piece" data-x="0" data-y="0" data-text="有些改變很細微。">
-<img src="images/puzzle/p2.png" class="piece" data-x="140" data-y="0" data-text="很多事情，是慢慢學會的。">
-<img src="images/puzzle/p3.png" class="piece" data-x="0" data-y="140" data-text="那些過程，也成為一部分。">
-<img src="images/puzzle/p4.png" class="piece" data-x="140" data-y="140" data-text="她一直在我旁邊。">
-
+<div class="container">
+  <div id="text"></div>
+  <div id="choices"></div>
 </div>
-
-<p id="puzzleText"></p>
-</section>
-
-<!-- 第二章 -->
-<section id="p2">
-<div class="slider">
-<img src="images/identity/city.png" class="top">
-<div id="overlay">
-<img src="images/identity/culture.png">
-</div>
-<input type="range" id="range" value="0">
-</div>
-<p id="text2">我從小在城市長大。</p>
-</section>
-
-<!-- 第三章 -->
-<section id="p3">
-<div class="slider-vertical">
-<img src="images/school/vocational.png" class="top">
-<div id="overlayV">
-<img src="images/school/elite.png">
-</div>
-<input type="range" id="rangeV" value="0">
-</div>
-<p id="text3">我原本的起點，在這裡。</p>
-</section>
-
-<!-- 第四章 -->
-<section id="p4">
-<img src="images/ntuk.png" class="dream">
-<p>有些期待，慢慢出現。</p>
-</section>
-
-<!-- 第五章 -->
-<section id="p5">
-<div class="transition-box">
-<img src="images/life/study.png" id="img1">
-<img src="images/life/work.png" id="img2">
-</div>
-<p id="text5">白天，我是學生。</p>
-</section>
-
-<!-- 最終 -->
-<section id="end">
-<div style="position:relative;width:300px;height:300px;">
-<img src="images/identity/city.png" class="identity" style="top:0;left:0">
-<img src="images/identity/culture.png" class="identity" style="top:0;right:0">
-<img src="images/school/vocational.png" class="identity" style="bottom:0;left:0">
-<img src="images/school/elite.png" class="identity" style="bottom:0;right:0">
-<img src="images/life/study.png" class="identity" style="top:50%;left:0">
-<img src="images/life/work.png" class="identity" style="top:50%;right:0">
-</div>
-<p>這些樣子，都同時存在。</p>
-</section>
 
 <script>
 
-/* ===== 拼圖 ===== */
-const pieces=document.querySelectorAll(".piece");
-const textBox=document.getElementById("puzzleText");
-let correct=0;
+const story = {
 
-pieces.forEach(p=>{
-p.onmousedown=function(e){
+start:{
+text:`我很難用一種「典型」的方式來描述自己的身分與認同。`,
+choices:[
+  {text:"族群", next:"ethnicity"},
+  {text:"教育與階級", next:"class"},
+  {text:"學科與知識", next:"discipline"},
+  {text:"性別與情感", next:"gender"}
+]
+},
 
-if(p.classList.contains("done")) return;
+/* 族群 */
+ethnicity:{
+text:`我是原住民，但沒有在部落成長。\n生活方式也以都市漢人文化為主。\n\n這樣的距離感，讓我開始思考：\n當文化沒有明顯外在標誌時，我如何理解自己的位置？`,
+choices:[
+  {text:"他人如何看我？", next:"ethnicity2"},
+  {text:"回到開始", next:"start"}
+]
+},
 
-let shiftX=e.clientX-p.offsetLeft;
-let shiftY=e.clientY-p.offsetTop;
+ethnicity2:{
+text:`在多數情境中，我被視為主流的一部分。\n\n但當身分被知道時，\n會出現一些預設：\n升學加分、文化期待、家庭背景。\n\n族群不只是生活方式，\n也是一種社會分類。`,
+choices:[
+  {text:"回到整體", next:"start"}
+]
+},
 
-function move(e){
-p.style.left=e.pageX-shiftX+"px";
-p.style.top=e.pageY-shiftY+"px";
+/* 階級 */
+class:{
+text:`家裡曾有一段時間屬於低收入戶。\n\n很多選擇不是興趣導向，\n而是成本導向。`,
+choices:[
+  {text:"教育經驗", next:"class2"},
+  {text:"回到開始", next:"start"}
+]
+},
+
+class2:{
+text:`從高職到中山女高，\n我第一次明顯感受到文化差異。\n\n對未來的想像、\n對成功的定義、\n對自信的培養方式，都不一樣。\n\n校園也是一種階級文化的縮影。`,
+choices:[
+  {text:"回到整體", next:"start"}
+]
+},
+
+/* 學科 */
+discipline:{
+text:`我曾在農藝系學習。\n\n那裡重視技術、效率與改良。`,
+choices:[
+  {text:"為何轉系？", next:"discipline2"},
+  {text:"回到開始", next:"start"}
+]
+},
+
+discipline2:{
+text:`後來我轉入歷史系。\n\n我開始更關心土地背後的歷史與人。\n\n不同學科，其實代表不同世界觀。`,
+choices:[
+  {text:"回到整體", next:"start"}
+]
+},
+
+/* 性別 */
+gender:{
+text:`在性別與情感認同上，我是雙性戀。\n\n異性戀常被視為默認。`,
+choices:[
+  {text:"如何影響我？", next:"gender2"},
+  {text:"回到開始", next:"start"}
+]
+},
+
+gender2:{
+text:`很多時候，我會先觀察環境，\n再決定是否表達自己。\n\n文化不一定排斥，\n但會透過語言與假設提醒誰是多數。`,
+choices:[
+  {text:"回到整體", next:"start"}
+]
+},
+
+/* 結尾 */
+end:{
+text:`回頭看，我處在多重文化交會之中。\n\n這些不是劇烈衝突，\n而是日常中反覆出現的調整。\n\n認同不是宣告，\n而是一個持續理解的過程。`,
+choices:[
+  {text:"重新開始", next:"start"}
+]
 }
 
-function stop(){
-document.removeEventListener("mousemove",move);
-document.removeEventListener("mouseup",stop);
+};
 
-let x=parseInt(p.dataset.x);
-let y=parseInt(p.dataset.y);
+function render(scene){
 
-if(Math.abs(p.offsetLeft-x)<30 && Math.abs(p.offsetTop-y)<30){
+const textBox=document.getElementById("text");
+const choiceBox=document.getElementById("choices");
 
-p.style.left=x+"px";
-p.style.top=y+"px";
-p.classList.add("done");
+textBox.innerText=story[scene].text;
+choiceBox.innerHTML="";
 
-textBox.innerText=p.dataset.text;
-
-correct++;
-
-if(correct===4){
-setTimeout(()=>{
-document.getElementById("p2").scrollIntoView({behavior:"smooth"});
-},800);
-}
-}
-}
-
-document.addEventListener("mousemove",move);
-document.addEventListener("mouseup",stop);
-}
+story[scene].choices.forEach(c=>{
+const btn=document.createElement("div");
+btn.className="choice";
+btn.innerText=c.text;
+btn.onclick=()=>render(c.next);
+choiceBox.appendChild(btn);
 });
 
-/* ===== 統一滑動系統（阻尼） ===== */
-function smoothReveal(range, overlay, textBox, direction){
-
-let current=0;
-
-function animate(){
-let target=range.value;
-current += (target-current)*0.1;
-
-if(direction==="x"){
-overlay.style.width=current+"%";
-}else{
-overlay.style.height=current+"%";
 }
 
-if(current<30){
-textBox.innerText="起點。";
-}else if(current<70){
-textBox.innerText="開始變化。";
-}else{
-textBox.innerText="逐漸成為另一種樣子。";
-}
-
-requestAnimationFrame(animate);
-}
-
-animate();
-}
-
-smoothReveal(
-document.getElementById("range"),
-document.getElementById("overlay"),
-document.getElementById("text2"),
-"x"
-);
-
-smoothReveal(
-document.getElementById("rangeV"),
-document.getElementById("overlayV"),
-document.getElementById("text3"),
-"y"
-);
-
-/* ===== 第五章轉場 ===== */
-const img1=document.getElementById("img1");
-const img2=document.getElementById("img2");
-const text5=document.getElementById("text5");
-
-let state=0;
-
-setInterval(()=>{
-if(state===0){
-img1.style.opacity=0;
-img2.style.opacity=1;
-text5.innerText="有些時候，我也是工讀生。";
-state=1;
-}else{
-img1.style.opacity=1;
-img2.style.opacity=0;
-text5.innerText="白天，我是學生。";
-state=0;
-}
-},2500);
-
-/* ===== 最終 ===== */
-const ids=document.querySelectorAll(".identity");
-setInterval(()=>{
-const i=Math.floor(Math.random()*ids.length);
-ids[i].style.transform=`scale(${0.9+Math.random()*0.3})`;
-},800);
+render("start");
 
 </script>
 
