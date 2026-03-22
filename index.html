@@ -14,6 +14,7 @@ body{
   font-family:"Noto Sans TC", sans-serif;
   background:#f8f8f8;
   color:#333;
+  scroll-behavior:smooth;
 }
 
 section{
@@ -35,12 +36,7 @@ nav{
   z-index:1000;
 }
 
-nav a{
-  margin:0 10px;
-  text-decoration:none;
-  color:#333;
-}
-
+/* ===== 拼圖 ===== */
 .puzzle-area{
   position:relative;
   width:260px;
@@ -50,18 +46,17 @@ nav a{
   position:absolute;
   width:120px;
   cursor:grab;
-  transition:0.3s;
 }
-.piece:hover{transform:scale(1.05);}
+.piece.done{cursor:default;}
 
-.slider{
+/* ===== slider 共用 ===== */
+.slider, .slider-vertical{
   position:relative;
   width:260px;
 }
 
-.base{
+.top{
   width:100%;
-  display:block;
 }
 
 #overlay{
@@ -73,31 +68,41 @@ nav a{
   overflow:hidden;
 }
 
-#overlay img{
-  width:100%;
-  display:block;
-}
-
-.handle{
+#overlayV{
   position:absolute;
   top:0;
-  width:3px;
-  height:100%;
+  left:0;
+  width:100%;
+  height:0%;
+  overflow:hidden;
+}
+
+/* ===== 滑桿統一 ===== */
+input[type=range]{
+  -webkit-appearance:none;
+  background:transparent;
+}
+
+#range{width:260px;}
+#rangeV{
+  writing-mode: bt-lr;
+  height:200px;
+}
+
+input[type=range]::-webkit-slider-runnable-track{
+  height:4px;
+  background:#ccc;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:14px;
+  height:14px;
   background:#333;
-  left:0%;
-  cursor:ew-resize;
+  border-radius:50%;
+  margin-top:-5px;
 }
 
-.fade{
-  opacity:0;
-  transform:translateY(20px);
-  transition:1s;
-}
-.fade.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
+/* ===== 夢境 ===== */
 .dream{
   animation:dream 2s infinite alternate;
 }
@@ -106,21 +111,23 @@ nav a{
   100%{filter:blur(3px);opacity:0.7;}
 }
 
-.dual{position:relative;}
-.dual img{
+/* ===== 第五章 ===== */
+.transition-box{
+  position:relative;
+  width:260px;
+}
+.transition-box img{
   position:absolute;
-  width:200px;
-  animation:breathe 3s infinite alternate;
+  width:100%;
+  transition:opacity 1.2s;
 }
-@keyframes breathe{
-  0%{opacity:0.6;}
-  100%{opacity:1;}
-}
+#img1{opacity:1;}
+#img2{opacity:0;}
 
+/* ===== 最終 ===== */
 .identity{
   position:absolute;
   width:120px;
-  transition:0.5s;
 }
 
 </style>
@@ -128,47 +135,45 @@ nav a{
 
 <body>
 
-<nav>
-<a href="#p1">拼圖</a>
-<a href="#p2">身分</a>
-<a href="#p3">轉換</a>
-<a href="#p4">台大</a>
-<a href="#p5">生活</a>
-<a href="#end">最後</a>
-</nav>
-
+<!-- 第一章 -->
 <section id="p1">
 <div class="puzzle-area">
-<img src="images/puzzle/p1.png" class="piece" data-x="0" data-y="0">
-<img src="images/puzzle/p2.png" class="piece" data-x="140" data-y="0">
-<img src="images/puzzle/p3.png" class="piece" data-x="0" data-y="140">
-<img src="images/puzzle/p4.png" class="piece" data-x="140" data-y="140">
+
+<img src="images/puzzle/p1.png" class="piece" data-x="0" data-y="0" data-text="有些改變很細微。">
+<img src="images/puzzle/p2.png" class="piece" data-x="140" data-y="0" data-text="很多事情，是慢慢學會的。">
+<img src="images/puzzle/p3.png" class="piece" data-x="0" data-y="140" data-text="那些過程，也成為一部分。">
+<img src="images/puzzle/p4.png" class="piece" data-x="140" data-y="140" data-text="她一直在我旁邊。">
+
 </div>
+
 <p id="puzzleText"></p>
 </section>
 
+<!-- 第二章 -->
 <section id="p2">
-<div class="slider" id="slider">
-
-<img src="images/identity/city.png" class="base">
-
+<div class="slider">
+<img src="images/identity/city.png" class="top">
 <div id="overlay">
 <img src="images/identity/culture.png">
 </div>
-
-<div class="handle" id="handle"></div>
-
+<input type="range" id="range" value="0">
 </div>
-
 <p id="text2">我從小在城市長大。</p>
 </section>
 
+<!-- 第三章 -->
 <section id="p3">
-<img src="images/school/vocational.png" class="fade">
-<img src="images/school/elite.png" class="fade">
-<p class="fade">不同環境，也帶來不同的標準。</p>
+<div class="slider-vertical">
+<img src="images/school/vocational.png" class="top">
+<div id="overlayV">
+<img src="images/school/elite.png">
+</div>
+<input type="range" id="rangeV" value="0">
+</div>
+<p id="text3">我原本的起點，在這裡。</p>
 </section>
 
+<!-- 第四章 -->
 <section id="p4">
 <img src="images/ntuk.png" class="dream">
 <p>有些期待，慢慢出現。</p>
@@ -176,11 +181,11 @@ nav a{
 
 <!-- 第五章 -->
 <section id="p5">
-<div class="dual">
-<img src="images/life/study.png">
-<img src="images/life/work.png" style="transform:translate(10px,10px);">
+<div class="transition-box">
+<img src="images/life/study.png" id="img1">
+<img src="images/life/work.png" id="img2">
 </div>
-<p>學生與工讀，同時存在。</p>
+<p id="text5">白天，我是學生。</p>
 </section>
 
 <!-- 最終 -->
@@ -193,14 +198,14 @@ nav a{
 <img src="images/life/study.png" class="identity" style="top:50%;left:0">
 <img src="images/life/work.png" class="identity" style="top:50%;right:0">
 </div>
-
 <p>這些樣子，都同時存在。</p>
 </section>
 
 <script>
 
-/* ===== 拼圖（修正版） ===== */
+/* ===== 拼圖 ===== */
 const pieces=document.querySelectorAll(".piece");
+const textBox=document.getElementById("puzzleText");
 let correct=0;
 
 pieces.forEach(p=>{
@@ -224,15 +229,19 @@ let x=parseInt(p.dataset.x);
 let y=parseInt(p.dataset.y);
 
 if(Math.abs(p.offsetLeft-x)<30 && Math.abs(p.offsetTop-y)<30){
+
 p.style.left=x+"px";
 p.style.top=y+"px";
 p.classList.add("done");
+
+textBox.innerText=p.dataset.text;
+
 correct++;
 
 if(correct===4){
 setTimeout(()=>{
 document.getElementById("p2").scrollIntoView({behavior:"smooth"});
-},600);
+},800);
 }
 }
 }
@@ -242,42 +251,71 @@ document.addEventListener("mouseup",stop);
 }
 });
 
-const slider=document.getElementById("slider");
-const overlay=document.getElementById("overlay");
-const handle=document.getElementById("handle");
-const text2=document.getElementById("text2");
+/* ===== 統一滑動系統（阻尼） ===== */
+function smoothReveal(range, overlay, textBox, direction){
 
-function update(x){
-let rect=slider.getBoundingClientRect();
-let percent=(x-rect.left)/rect.width*100;
+let current=0;
 
-percent=Math.max(0,Math.min(100,percent));
+function animate(){
+let target=range.value;
+current += (target-current)*0.1;
 
-overlay.style.width=percent+"%";
-handle.style.left=percent+"%";
-
-if(percent<30){
-text2.innerText="我從小在城市長大。";
-}else if(percent<70){
-text2.innerText="但我的身分不只這樣。";
+if(direction==="x"){
+overlay.style.width=current+"%";
 }else{
-text2.innerText="有些文化一直在我身上。";
+overlay.style.height=current+"%";
 }
+
+if(current<30){
+textBox.innerText="起點。";
+}else if(current<70){
+textBox.innerText="開始變化。";
+}else{
+textBox.innerText="逐漸成為另一種樣子。";
 }
 
-handle.onmousedown=function(e){
-document.onmousemove=(e)=>update(e.clientX);
-document.onmouseup=()=>document.onmousemove=null;
-};
+requestAnimationFrame(animate);
+}
 
-const fades=document.querySelectorAll(".fade");
-const obs=new IntersectionObserver(entries=>{
-entries.forEach(e=>{
-if(e.isIntersecting){e.target.classList.add("show");}
-});
-});
-fades.forEach(el=>obs.observe(el));
+animate();
+}
 
+smoothReveal(
+document.getElementById("range"),
+document.getElementById("overlay"),
+document.getElementById("text2"),
+"x"
+);
+
+smoothReveal(
+document.getElementById("rangeV"),
+document.getElementById("overlayV"),
+document.getElementById("text3"),
+"y"
+);
+
+/* ===== 第五章轉場 ===== */
+const img1=document.getElementById("img1");
+const img2=document.getElementById("img2");
+const text5=document.getElementById("text5");
+
+let state=0;
+
+setInterval(()=>{
+if(state===0){
+img1.style.opacity=0;
+img2.style.opacity=1;
+text5.innerText="有些時候，我也是工讀生。";
+state=1;
+}else{
+img1.style.opacity=1;
+img2.style.opacity=0;
+text5.innerText="白天，我是學生。";
+state=0;
+}
+},2500);
+
+/* ===== 最終 ===== */
 const ids=document.querySelectorAll(".identity");
 setInterval(()=>{
 const i=Math.floor(Math.random()*ids.length);
