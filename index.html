@@ -79,17 +79,19 @@ button{
 
 <script>
 
+let visited = new Set();
+
 const story = {
 
 start:{
 text:`我很難用一種「典型」的方式來描述自己的身分與認同。`,
 choices:[
-  {text:"早療", next:"early"},
-  {text:"族群", next:"ethnicity"},
-  {text:"階級與教育", next:"class"},
-  {text:"學科", next:"discipline"},
-  {text:"性別", next:"gender"},
-  {text:"生活", next:"life"}
+  {text:"早療經驗", next:"early"},
+  {text:"族群交織", next:"ethnicity"},
+  {text:"教育與階級", next:"class"},
+  {text:"學科轉換", next:"discipline"},
+  {text:"性取向", next:"gender"},
+  {text:"日常身分", next:"life"}
 ]
 },
 
@@ -97,10 +99,10 @@ early:{
 img:["images/puzzle/all.png"],
 steps:[
 `在更早之前，我其實是被觀察與修正的對象。`,
-
+  
 `有一段時間，我接受早期療育。
 很多細節被注意、被記錄，也被調整。`,
-
+  
 `這些過程不一定留下明確記憶，
 但影響了我理解自己的方式。`
 ],
@@ -127,15 +129,12 @@ img:[
 ],
 steps:[
 `家裡曾有一段時間屬於低收入戶。
-
 很多選擇不是興趣導向，而是成本導向。`,
 
 `從高職到中山女高，我第一次明顯感受到文化差異。
-
 校園也是一種階級文化的縮影。`,
 
 `後來，我進入台灣大學。
-
 這不只是學校的改變，
 也包含他人看待我的方式。`
 ],
@@ -146,9 +145,7 @@ discipline:{
 img:["images/life/study.png","images/life/work.png"],
 steps:[
 `我曾在農藝系學習。`,
-
 `後來轉入歷史系。`,
-
 `不同學科，其實代表不同世界觀。`
 ],
 choices:[{text:"回到開始", next:"start"}]
@@ -157,9 +154,7 @@ choices:[{text:"回到開始", next:"start"}]
 gender:{
 steps:[
 `在性別與情感認同上，我是雙性戀。`,
-
 `很多時候，我會先觀察環境。`,
-
 `再決定是否表達自己。`
 ],
 choices:[{text:"回到開始", next:"start"}]
@@ -169,12 +164,23 @@ life:{
 img:["images/life/study.png","images/life/work.png"],
 steps:[
 `有些時間，我在課堂裡。`,
-
-`有些時間，我在工作場域。`,
-
+`有些時間，我在辦公室。`,
 `這不是分開的生活，而是交織在一起。`
 ],
 choices:[{text:"回到開始", next:"start"}]
+},
+
+final:{
+steps:[
+`回頭看，我處在很多位置之間。`,
+`這些經驗不一定衝突，
+但會在不同情境中浮現。`,
+`我不是單一的樣子，
+而是在這些之間，慢慢成為自己。`
+],
+choices:[
+  {text:"重新開始", next:"start"}
+]
 }
 
 };
@@ -203,6 +209,8 @@ function typeWriter(el, text){
 let stepIndex = 0;
 
 function renderProgressive(scene){
+
+visited.add(scene);
 
 const textBox=document.getElementById("text");
 const btn=document.getElementById("nextBtn");
@@ -262,7 +270,6 @@ function showNext(){
 }
 
 btn.onclick=showNext;
-
 showNext();
 
 }
@@ -289,6 +296,21 @@ div.innerText=c.text;
 div.onclick=()=>renderProgressive(c.next);
 choices.appendChild(div);
 });
+
+if(
+  visited.has("early") &&
+  visited.has("ethnicity") &&
+  visited.has("class") &&
+  visited.has("discipline") &&
+  visited.has("gender") &&
+  visited.has("life")
+){
+  const div=document.createElement("div");
+  div.className="choice";
+  div.innerText="查看整體";
+  div.onclick=()=>renderProgressive("final");
+  choices.appendChild(div);
+}
 
 return;
 }
